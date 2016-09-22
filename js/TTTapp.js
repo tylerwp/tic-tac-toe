@@ -77,12 +77,14 @@ $(".boxes li").on("click",function(){
     if(tttGame.playersTurn == 1){
         P1.Moves[i] = tttGame.boardFieldReference[i];
         $(this).addClass('box-filled-1');
+        $(this).off();
         $('#player1').toggleClass('active');
         $('#player2').toggleClass('active');
         console.log('P1 Win?' + tttGame.CheckPlayerWin(P1.Moves));
     }else{
         P2.Moves[i] = tttGame.boardFieldReference[i]; 
         $(this).addClass('box-filled-2');
+        $(this).off();
         $('#player1').toggleClass('active');
         $('#player2').toggleClass('active');
         console.log('P2 Win?' + tttGame.CheckPlayerWin(P2.Moves));
