@@ -31,7 +31,7 @@ function TicTacToeGame(){
 
             //if 3 have matched for current combination then we have a winner.
             if(charCount >= 3){
-                console.log('WIN WIN WIN');
+                console.log('WIN WIN WIN');                
                 didWin = true;
             }
             
@@ -51,6 +51,8 @@ function TicTacToeGame(){
         }
     };
 
+     
+
 }
 
 //player object
@@ -69,7 +71,7 @@ var P2 = new tttPlayers("Jennifer");//*** if P2 player name = NoobRobo then appl
 
 $('#player1').toggleClass('active');
 
-
+$('#finish').hide();
 
 $(".boxes li").on("click",function(){
     console.log($(this).index());
@@ -80,14 +82,23 @@ $(".boxes li").on("click",function(){
         $(this).off();
         $('#player1').toggleClass('active');
         $('#player2').toggleClass('active');
-        console.log('P1 Win?' + tttGame.CheckPlayerWin(P1.Moves));
+       // console.log('P1 Win?' + tttGame.CheckPlayerWin(P1.Moves));
+       if(tttGame.CheckPlayerWin(P1.Moves)){
+            $('#board').hide();
+            $('#finish').show().addClass('playerWin-1');
+       }
+
     }else{
         P2.Moves[i] = tttGame.boardFieldReference[i]; 
         $(this).addClass('box-filled-2');
         $(this).off();
         $('#player1').toggleClass('active');
         $('#player2').toggleClass('active');
-        console.log('P2 Win?' + tttGame.CheckPlayerWin(P2.Moves));
+        //console.log('P2 Win?' + tttGame.CheckPlayerWin(P2.Moves));
+        if(tttGame.CheckPlayerWin(P2.Moves)){
+            $('#board').hide();
+            $('#finish').show().addClass('playerWin-2');
+       }
     }
     tttGame.gameboard[i] = tttGame.setPlayerTurn();    
     
