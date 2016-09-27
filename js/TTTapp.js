@@ -86,6 +86,7 @@ $(".boxes li").on("click",function(){
        if(tttGame.CheckPlayerWin(P1.Moves)){
             $('#board').hide();
             $('#finish').show().addClass('playerWin-1');
+            $('.message').html(P1.playerName);
        }
 
     }else{
@@ -98,6 +99,7 @@ $(".boxes li").on("click",function(){
         if(tttGame.CheckPlayerWin(P2.Moves)){
             $('#board').hide();
             $('#finish').show().addClass('playerWin-2');
+            $('.message').html(P2.playerName);
        }
     }
     tttGame.gameboard[i] = tttGame.setPlayerTurn();    

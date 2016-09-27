@@ -143,7 +143,14 @@ h1 {
     background-color: #FFA000;
 }
 
+#finish header{
+    background-image: url(../img/o-end.svg); 
+    background-repeat: no-repeat;
+    background-position: center; 
+}
+
 .playerWin-2{
     background-color: #3688C3;
+    
 }
 
