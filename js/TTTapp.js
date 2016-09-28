@@ -69,9 +69,19 @@ var tttGame = new TicTacToeGame();
 var P1 = new tttPlayers("Tyler");
 var P2 = new tttPlayers("Jennifer");//*** if P2 player name = NoobRobo then apply AI
 
+// hide game board view
+$('#board').hide();
+// ready player one
 $('#player1').toggleClass('active');
-
+// hide finish view
 $('#finish').hide();
+
+//start button click event to trigger board view
+$("#start .button").on("click",function(){
+    $("#start").hide();
+    $('#board').show();
+});
+
 
 $(".boxes li").on("click",function(){
     console.log($(this).index());
