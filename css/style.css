@@ -17,10 +17,19 @@ h1 {
 
 input.playername
 {
-    border: 0px solid #FFF;
-    border-bottom-width: 1px;
-    background-color: transparent;
+    
+   
+    background-color: rgba(222,222,222,.5);
     outline: none;
+
+    border-radius: 5px;
+    border: 1px solid #eaeaea;
+    padding: 8px 15px;
+    font-size: 18px;
+}
+
+.playerinput{
+  padding: 5px;
 }
 
 .button {
@@ -152,9 +161,16 @@ input.playername
 }
 
 #finish header{
-    background-image: url(../img/o-end.svg); 
+    
     background-repeat: no-repeat;
     background-position: center; 
+}
+
+.end-o{
+  background-image: url(../img/o-end.svg); 
+}
+.end-x{
+  background-image: url(../img/x-end.svg); 
 }
 
 .playerWin-2{
