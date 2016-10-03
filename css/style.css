@@ -71,7 +71,9 @@ input.playername
     font-size: 6em;
     font-weight: 700;
     color: #fff;
-    position: relative; }
+    position: relative; 
+    margin-bottom: 3px;
+    }
     .screen-win p:before {
       position: absolute;
       left: 0;
@@ -103,6 +105,13 @@ input.playername
   .board h1 {
     margin-top: 0.3em; }
 
+p.playername {
+    padding: 30px;
+    margin: 0px;
+    font-size: 300%;
+}
+
+
 .players {
   color: rgba(0, 0, 0, 0.2);
   text-align: center;
@@ -128,9 +137,17 @@ input.playername
   #player2.active {
     background: #3688C3; }
 
+    #player1.active .playerName1{
+      color:#fff;
+    }
+     #player2.active .playerName2{
+      color:#fff;
+    }
+
 .boxes {
   width: 480px;
   margin: 3em auto 0; }
+
   .boxes .box {
     background: #EFEFEF;
     border-radius: 4px;
@@ -146,11 +163,14 @@ input.playername
     background-size: 100px 100px;
     background-repeat: no-repeat;
     background-position: center center;}
+
     .boxes .box:nth-child(3n) {
       margin-right: 0; }
+
     .boxes .box-filled-1 {
       background-color: #FFA000;
       background-image: url(../img/o.svg); }
+
     .boxes .box-filled-2 {
       background-color: #3688C3;
       background-image: url(../img/x.svg); }
@@ -175,6 +195,19 @@ input.playername
 
 .playerWin-2{
     background-color: #3688C3;
+    
+}
+
+.playerWinNone{
+  background-color: #777;
+}
+
+ .boxes .playerHvr-1{
+   background-image: url(../img/o.svg);
+   
+}
+ .boxes .playerHvr-2{
+   background-image: url(../img/x.svg);
     
 }
 

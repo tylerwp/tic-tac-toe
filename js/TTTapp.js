@@ -100,10 +100,33 @@ $("#startPlayers .button").on("click",function(){
         P1 = new tttPlayers($('#P1name').val());
         P2 = new tttPlayers($('#P2name').val());//*** if P2 player name = NoobRobo then apply AI
 
+    //add player names to player boxes
+    $('.playerName1').html(P1.playerName);
+    $('.playerName2').html(P2.playerName);
+
     //setup events on board
     $(".boxes li").on("click",function(){
         gameBoardClickEvents(this);
     });
+
+    //jquery on hover 
+    $(".boxes li").mouseenter(function(){
+
+       if(tttGame.playersTurn == 1){
+           $(this).toggleClass('playerHvr-1');    
+        }else{
+           $(this).toggleClass('playerHvr-2');
+        }
+
+    }).mouseleave(function(){
+
+        if(tttGame.playersTurn == 1){
+           $(this).toggleClass('playerHvr-1');    
+        }else{
+           $(this).toggleClass('playerHvr-2');
+        }
+    });
+       
 
     $('#startPlayers').hide();
     $('#board').show();
@@ -128,8 +151,10 @@ function gameBoardClickEvents(box){
             $('#board').hide();
             $('#finish').show().addClass('playerWin-1');
             $('#finish header').addClass('end-o');
-            $('.message').html(P1.playerName);
+            $('.message').html('Winner');
+            $('.playername').html(P1.playerName);
        }
+       
 
     }else{
         P2.Moves[i] = tttGame.boardFieldReference[i]; 
@@ -141,32 +166,71 @@ function gameBoardClickEvents(box){
         if(tttGame.CheckPlayerWin(P2.Moves)){
             $('#board').hide();
             $('#finish').show().addClass('playerWin-2');
-             $('#finish header').addClass('end-x');
-            $('.message').html(P2.playerName);
+            $('#finish header').addClass('end-x');
+            $('.message').html('Winner');
+            $('.playername').html(P2.playerName);
        }
     }
-    tttGame.gameboard[i] = tttGame.setPlayerTurn();    
+
+     tttGame.gameboard[i] = tttGame.setPlayerTurn(); 
+
+    //if player 2 bot then 
+    if(tttGame.playersTurn == 2){
+       if(P2.playerName == 'noob'){ 
+          var noobMove =  $.inArray("-",tttGame.gameboard); 
+          if(noobMove !== -1){
+            P2.Moves[noobMove] = tttGame.boardFieldReference[noobMove];
+            var boxes = $(".boxes li");
+            $(boxes[noobMove]).addClass('box-filled-2');
+            $(boxes[noobMove]).off();
+            $('#player1').toggleClass('active');
+            $('#player2').toggleClass('active');
+            if (tttGame.CheckPlayerWin(P2.Moves)) {
+                $('#board').hide();
+                $('#finish').show().addClass('playerWin-2');
+                $('#finish header').addClass('end-x');
+                $('.message').html('Winner');
+                $('.playername').html(P2.playerName);
+            }else{
+                tttGame.gameboard[noobMove] = tttGame.setPlayerTurn(); 
+            }
+
+          }
+
+       }
+    }
+    
+    
+    //check for tie
+    if($.inArray('-',tttGame.gameboard) == -1){
+        // game over - tie    
+            $('#board').hide();
+            $('#finish').show().addClass('playerWinNone');
+           // $('#finish header').addClass('end-x');
+            $('.message').html("It's a Tie!");
+            //$('.playername').html(P2.playerName);    
+    }
     
     console.log('Board:' +  tttGame.gameboard + '\n PlayerTurn:' + tttGame.playersTurn + '\n P1:' + P1.Moves + '\n P2:' + P2.Moves);
 }
 
 $('#finish .button').on('click',function(){
-    //clear game
-    // hide game board view
-$('#board').hide();
-//hide player setup
-$('#startPlayers').hide();
-// ready player one
-//$('#player1').toggleClass('active');
-// hide finish view
-$('#finish').hide();
 
-//start button click event to trigger board view
+    //clear game and hide game board view
+    $('#board').hide();
+    //hide player setup
+    $('#startPlayers').hide();
+    // ready player one
+    
+    // hide finish view
+    $('#finish').hide().removeClass('playerWin-1 playerWin-2 playerWinNone');
+    $('.playername').html('');
 
+    //start button click event to trigger board view
     $("#start").show();
 
-    $('.boxes li').removeClass('box-filled-1');
-    $('.boxes li').removeClass('box-filled-2');
+    $('.boxes li').removeClass('box-filled-1 playerHvr-1');
+    $('.boxes li').removeClass('box-filled-2 playerHvr-2');
 
     P1 = null;
     P2 = null;
@@ -178,13 +242,10 @@ $('#finish').hide();
 
 
 //TODO: 
-    // mouse over show player icon 
-    // game over Show the word "Winner" or "It's a Tie!"
-
+  
     //Use the module pattern to wrap all of your JavaScript code into a single global variable or an immediately invoked function.
 
-    /// Name appears while the game is playing
-    // The name is displayed for the winning player
+   
 
 
 
