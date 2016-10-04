@@ -211,3 +211,10 @@ p.playername {
     
 }
 
+img.noob {
+    display: inline-block;
+    vertical-align: middle;
+    height: 46px;
+    cursor: pointer;
+}
+

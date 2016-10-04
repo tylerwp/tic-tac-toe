@@ -87,10 +87,19 @@ $("#start .button").on("click",function(){
     $('#P2name').val('');
 
     $('#startPlayers').show();
-
-//create new players
    
 
+});
+
+//setup robo button
+$('.noob').on('click',function(){
+    if($('#P2name').val() !== 'RoboNoob'){
+        $('#P2name').val('RoboNoob');
+        $('#P2name').prop('disabled', true);
+    }else{
+        $('#P2name').val('');
+        $('#P2name').prop('disabled', false);
+    }
 });
 
 $("#startPlayers .button").on("click",function(){
@@ -176,7 +185,7 @@ function gameBoardClickEvents(box){
 
     //if player 2 bot then 
     if(tttGame.playersTurn == 2){
-       if(P2.playerName == 'noob'){ 
+       if(P2.playerName == 'RoboNoob'){ 
           var noobMove =  $.inArray("-",tttGame.gameboard); 
           if(noobMove !== -1){
             P2.Moves[noobMove] = tttGame.boardFieldReference[noobMove];
@@ -208,7 +217,7 @@ function gameBoardClickEvents(box){
             $('#finish').show().addClass('playerWinNone');
            // $('#finish header').addClass('end-x');
             $('.message').html("It's a Tie!");
-            //$('.playername').html(P2.playerName);    
+            $('.playername').html('');    
     }
     
     console.log('Board:' +  tttGame.gameboard + '\n PlayerTurn:' + tttGame.playersTurn + '\n P1:' + P1.Moves + '\n P2:' + P2.Moves);
@@ -225,6 +234,7 @@ $('#finish .button').on('click',function(){
     // hide finish view
     $('#finish').hide().removeClass('playerWin-1 playerWin-2 playerWinNone');
     $('.playername').html('');
+    $('#P2name').prop('disabled', false);
 
     //start button click event to trigger board view
     $("#start").show();
