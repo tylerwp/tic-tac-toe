@@ -1,5 +1,5 @@
 
-//var Module = (function () {
+var gameModule = (function () {
 
     //game board object
     function TicTacToeGame() {
@@ -7,6 +7,7 @@
         this.winCombos = ["abc", "def", "ghi", "adg", "beh", "cfi", "aei", "ceg"];//all possible combinations to win the game
         this.boardFieldReference = ["a", "b", "c", "d", "e", "f", "g", "h", "i"];//letter box board map
         this.playersTurn = 1;
+        this.isWinner = 0;
 
         //check if player has winning combination
         TicTacToeGame.prototype.CheckPlayerWin = function (player) {
@@ -77,8 +78,7 @@
     $('#board').hide();
     //hide player setup
     $('#startPlayers').hide();
-    // ready player one
-    $('#player1').toggleClass('active');
+
     // hide finish view
     $('#finish').hide();
 
@@ -89,6 +89,8 @@
         //clear player input fields
         $('#P1name').val('');
         $('#P2name').val('');
+
+        $('#player1').addClass('active');
 
         $('#startPlayers').show();
 
@@ -106,44 +108,61 @@
         }
     });
 
+    //NEW GAME, PLAYER SETUP - click event for player/AI names
     $("#startPlayers .button").on("click", function () {
 
         //validate input
-        //create new players
-        P1 = new tttPlayers($('#P1name').val());
-        P2 = new tttPlayers($('#P2name').val());//*** if P2 player name = NoobRobo then apply AI
+        if ($('#P1name').val() !== '' && $('#P2name').val() !== '') {
 
-        //add player names to player boxes
-        $('.playerName1').html(P1.playerName);
-        $('.playerName2').html(P2.playerName);
+            //create new players
+            P1 = new tttPlayers($('#P1name').val());
+            P2 = new tttPlayers($('#P2name').val());//*** if P2 player name = NoobRobo then apply AI
 
-        //setup events on board
-        $(".boxes li").on("click", function () {
-            gameBoardClickEvents(this);
-        });
+            //add player names to player boxes
+            $('.playerName1').html(P1.playerName);
+            $('.playerName2').html(P2.playerName);
 
-        //on hover show game icons
-        $(".boxes li").mouseenter(function () {
+            //setup events on board
+            $(".boxes li").on("click", function () {
+                gameBoardClickEvents(this);
+            });
 
-            if (tttGame.playersTurn == 1) {
-                $(this).toggleClass('playerHvr-1');
-            } else {
-                $(this).toggleClass('playerHvr-2');
+            //on hover show game icons
+            $(".boxes li").mouseenter(function () {
+
+                if (tttGame.playersTurn == 1) {
+                    $(this).toggleClass('playerHvr-1');
+                } else {
+                    $(this).toggleClass('playerHvr-2');
+                }
+
+                //on mouse leave hide game icons
+            }).mouseleave(function () {
+
+                if (tttGame.playersTurn == 1) {
+                    $(this).toggleClass('playerHvr-1');
+                } else {
+                    $(this).toggleClass('playerHvr-2');
+                }
+            });
+
+
+            $('#startPlayers').hide();
+            $('#board').show();
+
+            //remove required validation element if any
+            if ($('.required').length) {
+                $('.required').remove();
             }
 
-            //on mouse leave hide game icons
-        }).mouseleave(function () {
-
-            if (tttGame.playersTurn == 1) {
-                $(this).toggleClass('playerHvr-1');
+        } else {
+            if (!$('.required').length) {
+                $('#startPlayers header').prepend('<div class="required">Cannot start game without player names or AI.</div>');
+                $(".required").effect("shake");
             } else {
-                $(this).toggleClass('playerHvr-2');
+                $(".required").effect("shake");
             }
-        });
-
-
-        $('#startPlayers').hide();
-        $('#board').show();
+        }
 
     });
 
@@ -154,50 +173,57 @@
     function gameBoardClickEvents(box) {
         console.log($(box).index());
         var i = $(box).index();
+
         if (tttGame.playersTurn == 1) {
+            //Player One moves - update player object            
             P1.Moves[i] = tttGame.boardFieldReference[i];
             $(box).addClass('box-filled-1');
             $(box).off();
             $('#player1').toggleClass('active');
             $('#player2').toggleClass('active');
 
+            //check if player One made the winning move
             if (tttGame.CheckPlayerWin(P1.Moves)) {
+                tttGame.isWinner = true;
                 $('#board').hide();
                 $('#finish').show().addClass('playerWin-1');
+                $('#finish header').removeClass('end-x');
                 $('#finish header').addClass('end-o');
                 $('.message').html('Winner');
                 $('.playername').html(P1.playerName);
             }
 
         } else {
+            //Player Two moves - update player object 
             P2.Moves[i] = tttGame.boardFieldReference[i];
             $(box).addClass('box-filled-2');
             $(box).off();
             $('#player1').toggleClass('active');
             $('#player2').toggleClass('active');
-
+            //check if player Two made the winning move
             if (tttGame.CheckPlayerWin(P2.Moves)) {
+                tttGame.isWinner = true;
                 $('#board').hide();
                 $('#finish').show().addClass('playerWin-2');
+                $('#finish header').removeClass('end-o');
                 $('#finish header').addClass('end-x');
                 $('.message').html('Winner');
                 $('.playername').html(P2.playerName);
             }
         }
 
+        //update gameboard for next player
         tttGame.gameboard[i] = tttGame.setPlayerTurn();
 
-        //if player 2 AI than run AI moves 
+        //if player Two is AI then run AI moves 
         if (tttGame.playersTurn == 2) {
             if (P2.playerName == 'RoboNoob') {
+
                 var noobMove = $.inArray("-", tttGame.gameboard);
                 if (noobMove !== -1) {
+                    //update player moves
                     P2.Moves[noobMove] = tttGame.boardFieldReference[noobMove];
-                    var boxes = $(".boxes li");
-                    $(boxes[noobMove]).addClass('box-filled-2');
-                    $(boxes[noobMove]).off();
-                    $('#player1').toggleClass('active');
-                    $('#player2').toggleClass('active');
+                    //check if AI player made the winning move
                     if (tttGame.CheckPlayerWin(P2.Moves)) {
                         $('#board').hide();
                         $('#finish').show().addClass('playerWin-2');
@@ -208,32 +234,57 @@
                         tttGame.gameboard[noobMove] = tttGame.setPlayerTurn();
                     }
 
+                    //prevent click events while AI runs
+                    $('#board header').append('<div class="overlay"></div>');
+
+                    //set timeout to slow the display of the AI
+
+                    setTimeout(function () {
+
+                        var boxes = $(".boxes li");
+                        $(boxes[noobMove]).addClass('box-filled-2');
+                        $(boxes[noobMove]).off();
+                        $('#player1').toggleClass('active');
+                        $('#player2').toggleClass('active');
+
+                        $('.overlay').remove();
+
+                    }, 500);
+
+
+
                 }
+
 
             }
         }
 
 
-        //check for tie
-        if ($.inArray('-', tttGame.gameboard) == -1) {
+        //check for tie, check for completed game board and no winners
+        if (($.inArray('-', tttGame.gameboard) == -1) && (!tttGame.isWinner)) {
             // game over - tie    
             $('#board').hide();
             $('#finish').show().addClass('playerWinNone');
-            // $('#finish header').addClass('end-x');
+            $('#finish header').removeClass('end-o end-x');
             $('.message').html("It's a Tie!");
             $('.playername').html('');
         }
-
-        //log testing
+        
         //console.log('Board:' +  tttGame.gameboard + '\n PlayerTurn:' + tttGame.playersTurn + '\n P1:' + P1.Moves + '\n P2:' + P2.Moves);
     }
 
+
+    //GAME OVER, click event to start a new game
     $('#finish .button').on('click', function () {
 
         //clear game and hide game board view
         $('#board').hide();
         //hide player setup
         $('#startPlayers').hide();
+
+        //clear player views
+        $('#player1').removeClass('active');
+        $('#player2').removeClass('active');
 
         // hide finish view
         $('#finish').hide().removeClass('playerWin-1 playerWin-2 playerWinNone');
@@ -256,14 +307,9 @@
 
     });
 
-//})();
+})();
 
-//TODO: 
 
-    // Done: (just disabled) Use the module pattern to wrap all of your JavaScript code into a single global variable or an immediately invoked function.
-    // Bug: fix its a tie display of game icons
-    // need input validation
-    // Bug: playing AI, player highlights not working correctly 
 
 
 
