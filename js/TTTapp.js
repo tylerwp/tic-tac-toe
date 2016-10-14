@@ -219,7 +219,32 @@ var gameModule = (function () {
         if (tttGame.playersTurn == 2) {
             if (P2.playerName == 'RoboNoob') {
 
-                var noobMove = $.inArray("-", tttGame.gameboard);
+                //setup AI for RoboNoob
+                var noobMove = null;
+                //create copy of gameboard so to not effect the orginal.                
+                var tttGameGb = new Array();
+                for(var gbCopy = 0;gbCopy < tttGame.gameboard.length;gbCopy++){                    
+                    tttGameGb[gbCopy] = tttGame.gameboard[gbCopy];
+                }
+                
+                //append index to item array for reference after filtering.
+                for (var gb = 0; gb < tttGameGb.length; gb++) {
+                    tttGameGb[gb] = gb + tttGameGb[gb];                   
+                }
+                //Select random element from array that contains '-' that is an uplayed box
+                (function (src) {
+                    var gBoardindex = (~~(Math.random() * src.length));
+                    var gBresult = src[gBoardindex];
+                    if (gBresult !== -1) {
+                        noobMove = parseInt(gBresult.replace('-', ''));
+                    }
+                } (tttGameGb.filter(function (elem) {
+                                                        return elem.includes('-');
+                                                    }
+                                   )
+                  )
+                );
+
                 if (noobMove !== -1) {
                     //update player moves
                     P2.Moves[noobMove] = tttGame.boardFieldReference[noobMove];
